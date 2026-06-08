@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Jay Kim & Kimchi Chat</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #fff8f0;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    background-color: #ff6f61;
+    padding: 20px;
+    text-align: center;
+    color: white;
+    font-size: 2em;
+  }
+  #chat-container {
+    max-width: 800px;
+    margin: 20px auto;
+    border: 2px solid #ff6f61;
+    border-radius: 10px;
+    padding: 10px;
+    height: 500px;
+    overflow-y: auto;
+    background: #fff0e5;
+  }
+  .message {
+    padding: 8px 12px;
+    margin: 10px 0;
+    background-color: #ffe0d0;
+    border-radius: 8px;
+    max-width: 70%;
+  }
+  .user {
+    font-weight: bold;
+    color: #d14d3e;
+  }
+  #message-input {
+    display: flex;
+    max-width: 800px;
+    margin: 10px auto;
+  }
+  #message {
+    flex: 1;
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 8px;
+    border: 2px solid #ff6f61;
+  }
+  #send {
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #ff6f61;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  #send:hover {
+    background-color: #e05555;
+  }
+</style>
+</head>
+<body>
+
+<header>Jay Kim & Kimchi Chat 🥢🔥</header>
+
+<div id="chat-container"></div>
+
+<form id="message-input" onsubmit="return sendMessage()">
+  <input type="text" id="message" placeholder="Type about Jay and kimchi..." required />
+  <button id="send">Send</button>
+</form>
+
+<script>
+  const chatContainer = document.getElementById('chat-container');
+
+  // Load saved chat messages from localStorage
+  let chatHistory = JSON.parse(localStorage.getItem('kimchiChat')) || [];
+  chatHistory.forEach(msg => addMessageToChat(msg));
+
+  function addMessageToChat(msg) {
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'message';
+    msgDiv.innerHTML = `<div class="user">${msg.user}:</div> <div class="text">${msg.text}</div>`;
+    chatContainer.appendChild(msgDiv);
+  }
+
+  function saveChat() {
+    localStorage.setItem('kimchiChat', JSON.stringify(chatHistory));
+  }
+
+  function sendMessage() {
+    const messageInput = document.getElementById('message');
+    const messageText = messageInput.value.trim();
+    if (messageText === '') return false;
+
+    // Random username
+    const userNames = ['KimchiFan1', 'JayLover', 'K-Obsessed', 'SpicySoul'];
+    const user = userNames[Math.floor(Math.random() * userNames.length)];
+
+    const msg = { user: user, text: messageText };
+
+    // Add message to chat array and save
+    chatHistory.push(msg);
+    saveChat();
+
+    // Display message
+    addMessageToChat(msg);
+
+    // Scroll to bottom
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+
+    messageInput.value = '';
+    return false; // prevent form submission
+  }
+</script>
+
+</body>
+</html>
